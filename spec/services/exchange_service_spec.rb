@@ -3,30 +3,31 @@ require 'json'
 require './app/services/exchange_service'
 
 describe ExchangeService do
-  let(:source_currency) { 'USD' } 
-  let(:target_currency) { 'BRL' } 
-  let(:excahnge_value) { 3.4546 } 
+  let(:source_currency) { "USD" } 
+  let(:target_currency) { "BRL" } 
+  let(:exchange_value) { 3.4546 } 
   let(:api_return) do 
   { 
-    curency:
-    [
+    currency: [
       {
         currency: "#{source_currency}/#{target_currency}",
-        value: excahnge_value,
+        value: exchange_value,
         date: Time.now,
-        type: 'original'
+        type: "Original"
       }
     ]
   } 
-
-  before do
-    allow(RestClient).to recive(:get) { OpenStruct.new(body: api_return.to_json) }
   end
   
+  before do
+    allow(RestClient).to receive(:get) { OpenStruct.new(body: api_return.to_json) }
   end
+  
+  
   it "#call" do
-    service_exchange = ExchangeService.new('BRL', 'USD', rand(0..999)).call
-    expected_exchange = amount * excahnge_value
-    expect(service_exchannge ).to eq(expected_exchange)
+    amount = rand(0..999)
+    service_exchange = ExchangeService.new('BRL', 'USD', amount).call
+    expected_exchange = amount * exchange_value
+    expect(service_exchange).to eq(expected_exchange)
   end  
 end
